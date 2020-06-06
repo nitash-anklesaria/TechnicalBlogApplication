@@ -1,10 +1,12 @@
 package technicalblog.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import technicalblog.model.Post;
+import technicalblog.repository.PostRepository;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PostService {
@@ -12,11 +14,14 @@ public class PostService {
     public PostService() {
         System.out.println("*** PostService ***");
     }
-    public ArrayList<Post> getAllPosts(){
 
-        ArrayList<Post> posts = new ArrayList<>();
+    @Autowired
+    private PostRepository postRepository;
 
-        Post post1 = new Post();
+    public List<Post> getAllPosts(){
+        return postRepository.getAllPosts();
+
+/*       Post post1 = new Post();
         post1.setTitle("Post 1");
         post1.setBody("Body of Post 1");
         post1.setDate(new Date());
@@ -35,23 +40,89 @@ public class PostService {
         post3.setBody("Body of Post 3");
         post3.setDate(new Date());
 
-        posts.add(post3);
+        posts.add(post3);*/
 
-        return posts;
+/*        Connection con = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/technicalblog", "postgres", "admin123");
+
+            Statement statement = con.createStatement();
+
+            ResultSet rs = statement.executeQuery("SELECT * FROM posts");
+            while(rs.next()){
+                Post post = new Post();
+                post.setTitle(rs.getString("title"));
+                post.setBody(rs.getString("body"));
+                posts.add(post);
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                con.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }*/
+
     }
 
-    public ArrayList<Post> getOnePost() {
-        ArrayList<Post> posts = new ArrayList<>();
-
-        Post post1 = new Post();
+    public Post getOnePost() {
+        return postRepository.getLatestPost();
+/*        Post post1 = new Post();
         post1.setTitle("This is your Post");
         post1.setBody("This is your Post. It has some valid content");
         post1.setDate(new Date());
-        posts.add(post1);
+        posts.add(post1);*/
 
-        return posts;
+/*        Connection con = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/technicalblog", "postgres", "admin123");
+
+            Statement statement = con.createStatement();
+
+            ResultSet rs = statement.executeQuery("SELECT * FROM posts WHERE id = 4");
+            while(rs.next()){
+                Post post = new Post();
+                post.setTitle(rs.getString("title"));
+                post.setBody(rs.getString("body"));
+                posts.add(post);
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                con.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return posts;*/
+
     }
 
     public void createPost(Post newPost){
+        newPost.setDate(new Date());
+        postRepository.createPost(newPost);
     }
+
+    public Post getPost(Integer postId){
+        return postRepository.getPost(postId);
+    }
+
+    public void updatePost(Post updatedPost){
+        updatedPost.setDate(new Date());
+        postRepository.updatePost(updatedPost);
+    }
+
+    public void deletePost(Integer postId) {
+        postRepository.deletePost(postId);
+    }
+
 }
